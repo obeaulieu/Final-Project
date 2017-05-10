@@ -6,7 +6,6 @@ Created on Mon May  1 21:29:36 2017
 @author: livbeaulieu30
 """
 
-
 # Data organization
 # Using a netCDF to organize photos and scan data from DB1
 
@@ -73,12 +72,6 @@ x.units = 'Meters'
 y.units = 'Meters'
 
 
-#def write_nc( datafile, varname, x, y):
-    #nx = len(x)
-    #ny = len(y)
-    
-#write_nc( datafile, 'data', x, y)
-
 nc.close() 
 
 #import columns of sed flux, water discharge
@@ -96,46 +89,48 @@ datafiles_p = glob('*.jpg')
 npdim = 12212224
 xpdimension = range(0, 4288)
 ypdimension = range(0, 2848)
-#zdimension = 35
+rgbdimension = 3
                                                         
 #dimensions
 #time = nc.createDimension('time', None)
 xp = nc.createDimension('xp', len(xpdimension))
 yp = nc.createDimension('yp', len(ypdimension))
 timep = nc.createDimension('timep', len(datafiles_p))
-#nc.createDimension('z', zdimension)
+rgb = nc.createDimension('rgb', 3)
                                                         
 #variables
 xp = nc.createVariable('xp', 'f4', ('xp',))
 yp = nc.createVariable('yp', 'f4', ('yp',))
 timep = nc.createVariable('timep', 'f4', ('timep',))
-#z = nc.createVariable('z', 'f4', ('z',))
-nc.createVariable('fieldp', 'f4', ('yp', 'xp', 'timep'))
+rgb = nc.createVariable('rgb', 'f4', ('rgb',))
+nc.createVariable('fieldp', 'f4', ('xp', 'yp', 'rgb', 'timep'))
 
-import PIL
-img = PIL.Image.open('Img1.jpg').convert('L')
-imgarr = np.array(img)
-nc.variables['timep'][:] = imgarr
+from PIL import Image
+import os
+for infile in glob('*.jpg'):
+    file, ext = os.path.splitext(infile)
+    im = Image.open(infile)
+    imgarr = np.array(im)
 
-
-#t_pic = []
-#i = 0
-#for datafilep in datafiles_p:
-    #z1Dp = np.fromfile(datafilep, dtype=np.float32)
+t_pic = []
+i = 0
+for datafilep in datafiles_p:
+    z1Dp = np.fromfile(datafilep, dtype=np.uint8, count=-1)
     #print(z1Dp.shape)
-    #zp = np.reshape(z1Dp, (len(ypdimension), -1))
-    #z1Dp[z1Dp == -9999] = np.nan # no data handling
+    #zp = np.reshape(z1Dp, (-1, 4288))
+    #zp[zp == -9999] = np.nan # no data handling
     #z = np.flipud(z) # flip top to bottom
-    #nc.variables['fieldp'][2848, 4288, i] = z1Dp
+    #nc.variables['fieldp'][:, :, i] = zp
     #plt.imshow(z)
     #plt.show()
-    #print datafilep
-    #t_pic.append(int(datafilep.split('Img')[1].split('.')[0]))
-    #i += 1
+    print datafilep
+    t_pic.append(int(datafilep.split('Img')[1].split('.')[0]))
+    i += 1
 
 nc.variables['xp'][:] = np.arange(0, len(xp)*1E-3, 1E-3)
 nc.variables['yp'][:] = np.arange(0, len(yp)*1E-3, 1E-3)
-#nc.variables['timep'][:] = np.array(t_pic)
+nc.variables['rgb'][:] = np.arange(0, 3)
+nc.variables['timep'][:] = np.array(t_pic)
 
 xp.units = 'Meters'
 yp.units = 'Meters'
