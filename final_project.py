@@ -38,7 +38,7 @@ y = nc.createVariable('y', 'f4', ('y',))
 time = nc.createVariable('time', 'f4', ('time',))
 nc.createVariable('Scans_Visualization', 'f4', ('y', 'x', 'time'))
 
-#data analysis
+#data transformation
 t_scan = []
 i = 0
 for datafile in datafiles:
@@ -86,7 +86,7 @@ timep = nc.createVariable('timep', 'f4', ('timep',))
 rgb = nc.createVariable('rgb', 'f4', ('rgb',))
 nc.createVariable('Photographs_Visualization', 'f4', ('yp', 'xp', 'timep', 'rgb'))
 
-#data analysis
+#data transformation
 t_pic = []
 i = 0
 for datafilep in datafiles_p:
