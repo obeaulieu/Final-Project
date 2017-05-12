@@ -21,7 +21,7 @@ import scipy.ndimage
 #im.size
 
 # create a new netCDF file
-file = 'BLcontrolscanFiles.nc'
+file = 'ExperimentScans.nc'
 nc = Dataset(file , 'w' , format='NETCDF4') #nc is now shell for data
 #print (nc.file_format)
 
@@ -66,7 +66,7 @@ y.units = 'Meters'
 nc.close() 
 
 #Create new dataset for photographs of experiments
-file = 'BLcontrolscanFilesp.nc'
+file = 'ExperimentPhotographs.nc'
 nc = Dataset(file , 'w' , format='NETCDF4')
 
 datafiles_p = glob('*.jpg')
@@ -87,14 +87,14 @@ xp = nc.createVariable('xp', 'f4', ('xp',))
 yp = nc.createVariable('yp', 'f4', ('yp',))
 timep = nc.createVariable('timep', 'f4', ('timep',))
 rgb = nc.createVariable('rgb', 'f4', ('rgb',))
-nc.createVariable('Photographs_Visualization', 'f4', ('yp', 'xp', 'timep'))
+nc.createVariable('Photographs_Visualization', 'f4', ('yp', 'xp', 'timep', 'rgb'))
 
 
 t_pic = []
 i = 0
 for datafilep in datafiles_p:
     z1Dp = scipy.ndimage.imread(datafilep, False, 'RGB')
-    print(z1Dp.shape)
+    #print(z1Dp.shape)
     #zp = np.ndarray.reshape(z1Dp, (-1, 4288, 3))
     #zp[zp == -9999] = np.nan # no data handling
     z1Dp = np.flipud(z1Dp) # flip top to bottom
