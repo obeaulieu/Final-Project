@@ -5,7 +5,6 @@ Created on Mon May  1 21:29:36 2017
 
 @author: livbeaulieu30
 """
-
 # Data organization
 # Using a netCDF to organize photos and scan data from DB1
 
@@ -16,10 +15,6 @@ from osgeo import gdal
 from numpy import shape
 import scipy.ndimage
 
-#from PIL import Image
-#im=Image.open('Img2.jpg')
-#im.size
-
 # create a new netCDF file
 file = 'ExperimentScans.nc'
 nc = Dataset(file , 'w' , format='NETCDF4') #nc is now shell for data
@@ -28,7 +23,7 @@ nc = Dataset(file , 'w' , format='NETCDF4') #nc is now shell for data
 #data input                                                       
 datafiles = glob('*.DAT')
 
-#ndim = 9450336
+#Scan Size
 xdimension = range(0, 3936)
 ydimension = range(0, 2401)
                                                         
@@ -43,6 +38,7 @@ y = nc.createVariable('y', 'f4', ('y',))
 time = nc.createVariable('time', 'f4', ('time',))
 nc.createVariable('Scans_Visualization', 'f4', ('y', 'x', 'time'))
 
+#data analysis
 t_scan = []
 i = 0
 for datafile in datafiles:
@@ -62,15 +58,16 @@ nc.variables['time'][:] = np.array(t_scan)
 x.units = 'Meters'
 y.units = 'Meters'
 
-
 nc.close() 
 
 #Create new dataset for photographs of experiments
 file = 'ExperimentPhotographs.nc'
 nc = Dataset(file , 'w' , format='NETCDF4')
 
+#data input
 datafiles_p = glob('*.jpg')
 
+#Image size
 xpdimension = range(0, 4288)
 ypdimension = range(0, 2848)
 rgbdimension = 3
@@ -89,7 +86,7 @@ timep = nc.createVariable('timep', 'f4', ('timep',))
 rgb = nc.createVariable('rgb', 'f4', ('rgb',))
 nc.createVariable('Photographs_Visualization', 'f4', ('yp', 'xp', 'timep', 'rgb'))
 
-
+#data analysis
 t_pic = []
 i = 0
 for datafilep in datafiles_p:
