@@ -5,6 +5,7 @@ Created on Mon May  1 21:29:36 2017
 
 @author: livbeaulieu30
 """
+
 # Data organization
 # Using a netCDF to organize photos and scan data from DB1
 
